@@ -1,0 +1,2071 @@
+package frontEnd;
+import backEnd.*;
+import java.io.File;
+import java.sql.Connection;
+import java.sql.DriverManager;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Map;
+import javax.swing.DefaultComboBoxModel;
+import javax.swing.JOptionPane;
+import java.util.Random;
+import net.sf.jasperreports.engine.JasperCompileManager;
+import net.sf.jasperreports.engine.JasperExportManager;
+import net.sf.jasperreports.engine.JasperFillManager;
+import net.sf.jasperreports.engine.JasperPrint;
+import net.sf.jasperreports.engine.JasperReport;
+import net.sf.jasperreports.engine.design.JasperDesign;
+import net.sf.jasperreports.engine.xml.JRXmlLoader;
+import net.sf.jasperreports.view.JasperViewer;
+
+/*
+ * To change this license header, choose License Headers in Project Properties.
+ * To change this template file, choose Tools | Templates
+ * and open the template in the editor.
+ */
+
+/**
+ *
+ * @author Rifaul06
+ */
+public class FormPembelian extends javax.swing.JFrame implements Bookingable{
+    private ArrayList<Pembelian> listBeli = new ArrayList();
+    private ArrayList<Kursi> ListKursi = new ArrayList();
+    private ArrayList<Makanan> ListMakanan = new ArrayList();
+    private ArrayList<Minuman> ListMinuman = new ArrayList();
+    private double harga;
+    private Connection con;
+    /**
+     * Creates new form FormPembelian
+     */
+    public FormPembelian() {
+        initComponents();
+        txtKodeKursi.setText("");
+        txtJumlahTiket.setText("0");
+        jTextTotMakan.setText("0");
+        jTextTotMinum.setText("0");
+        setCmbFilm();
+        setJam();
+        setCmbMakan();
+        setCmbMinum();
+    }
+    
+    public void showKursi(){
+        String kd ="";
+        for (Kursi kursi : ListKursi) {
+            kd += " "+kursi.getKode();
+        }
+        txtKodeKursi.setText(kd);
+        txtJumlahTiket.setText(String.valueOf(hitungKursi()));
+        txtTotalHarga.setText(String.valueOf(getTotal()));
+    }
+    
+    public int hitungKursi(){
+        return this.ListKursi.size();
+    }
+    
+    public void emptyKursi(){
+        ListKursi.removeAll(ListKursi);
+        txtKodeKursi.setText("");
+        txtJumlahTiket.setText("0");
+        txtHargaSatuan.setText("0");
+        jTextHargaMinum.setText("0");
+        jTextHargaMakan.setText("0");
+        txtTotalHarga.setText("0");
+        jTextJumlahMakan.setText("0");
+        jTextJumlahMinum.setText("0");
+    }
+    
+    public double getTotal(){
+        String hari = String.valueOf(cmbListHari.getSelectedItem());      
+        if (hari.equals("Minggu") || hari.equals("Sabtu")) {
+            this.harga = 45000;
+            txtHargaSatuan.setText(String.valueOf(harga));
+        } else {
+            this.harga = 35000;
+            txtHargaSatuan.setText(String.valueOf(harga));
+        }
+        return this.harga * Integer.valueOf(txtJumlahTiket.getText());
+    }
+    
+    @Override
+    public boolean isBooking(String kode, String judul){
+        boolean ans = false;
+        for (Pembelian beli : new Pembelian().getAll()) {
+            if (beli.getKursi().getKode().equals(kode) && beli.getStudio().getFilm().getJudul().equals(judul)) {
+                if (beli.getKursi().getStatus().equals("book")) {
+                    ans = true;                    
+                }
+            }
+        }
+        return ans;
+    }
+    
+    public void setCmbFilm(){
+        cmbListFilm.setModel(new DefaultComboBoxModel(new Film().getAll().toArray()));
+    }
+    public void setCmbMakan()
+    {
+        jComboBoxMakan.setModel(new DefaultComboBoxModel(new Makanan().getAll().toArray()));
+    }
+    public void setCmbMinum()
+    {
+        jComboBoxMinum.setModel(new DefaultComboBoxModel(new Minuman().getAll().toArray()));
+    }
+    
+    public void setTombol(String kode, String judul){
+        if (isBooking(kode, judul)) {
+            JOptionPane.showMessageDialog(null, "Sudah di Booking");
+        } else {
+            Kursi k = new Kursi();
+            k.setKode(kode);
+            int i =0;
+            for (Kursi kursi : ListKursi) {
+                if (kursi.getKode().equals(kode)) {
+                    i++;
+                }
+            }
+            if (i < 1) {
+                this.ListKursi.add(k);
+            }            
+        }
+    }    
+    public void setJam(){
+        Random ran = new Random();
+        String[][] jam ={
+        {"12.30","14.15","16.00","17.45","20.30","22.00"},
+        {"12.45","14.30","16.15","18.00","19.45","21.45"},
+        {"11.15","13.00","15.15","17.00","19.15","21.30"}};
+        cmbJam.setModel(new DefaultComboBoxModel());
+        int n = ran.nextInt(3);
+        for (int i = 0; i < 6; i++) {
+            cmbJam.addItem(jam[n][i]);
+        }
+    }
+    /**
+     * This method is called from within the constructor to initialize the form.
+     * WARNING: Do NOT modify this code. The content of this method is always
+     * regenerated by the Form Editor.
+     */
+    @SuppressWarnings("unchecked")
+    // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
+    private void initComponents() {
+
+        jTextField1 = new javax.swing.JTextField();
+        btnA1 = new javax.swing.JButton();
+        btnB1 = new javax.swing.JButton();
+        btnC1 = new javax.swing.JButton();
+        btnD1 = new javax.swing.JButton();
+        btnA2 = new javax.swing.JButton();
+        btnB2 = new javax.swing.JButton();
+        btnC2 = new javax.swing.JButton();
+        btnD2 = new javax.swing.JButton();
+        btnA3 = new javax.swing.JButton();
+        btnB3 = new javax.swing.JButton();
+        btnC3 = new javax.swing.JButton();
+        btnD3 = new javax.swing.JButton();
+        btnA4 = new javax.swing.JButton();
+        btnB4 = new javax.swing.JButton();
+        btnC4 = new javax.swing.JButton();
+        btnD4 = new javax.swing.JButton();
+        btnA5 = new javax.swing.JButton();
+        btnB5 = new javax.swing.JButton();
+        btnA6 = new javax.swing.JButton();
+        btnB6 = new javax.swing.JButton();
+        btnA7 = new javax.swing.JButton();
+        btnA8 = new javax.swing.JButton();
+        btnB8 = new javax.swing.JButton();
+        btnB7 = new javax.swing.JButton();
+        btnC8 = new javax.swing.JButton();
+        btnD8 = new javax.swing.JButton();
+        btnC7 = new javax.swing.JButton();
+        btnD7 = new javax.swing.JButton();
+        btnC6 = new javax.swing.JButton();
+        btnD6 = new javax.swing.JButton();
+        btnC5 = new javax.swing.JButton();
+        btnD5 = new javax.swing.JButton();
+        btnE1 = new javax.swing.JButton();
+        btnF1 = new javax.swing.JButton();
+        btnE2 = new javax.swing.JButton();
+        btnF2 = new javax.swing.JButton();
+        btnE3 = new javax.swing.JButton();
+        btnF3 = new javax.swing.JButton();
+        btnE4 = new javax.swing.JButton();
+        btnF4 = new javax.swing.JButton();
+        btnE5 = new javax.swing.JButton();
+        btnF5 = new javax.swing.JButton();
+        btnE6 = new javax.swing.JButton();
+        btnF6 = new javax.swing.JButton();
+        btnE7 = new javax.swing.JButton();
+        btnE8 = new javax.swing.JButton();
+        btnF8 = new javax.swing.JButton();
+        btnF7 = new javax.swing.JButton();
+        jLabel2 = new javax.swing.JLabel();
+        jSeparator1 = new javax.swing.JSeparator();
+        Film = new javax.swing.JLabel();
+        cmbListFilm = new javax.swing.JComboBox<>();
+        jLabel7 = new javax.swing.JLabel();
+        cmbListHari = new javax.swing.JComboBox<>();
+        jLabel3 = new javax.swing.JLabel();
+        cmbJam = new javax.swing.JComboBox<>();
+        jLabel4 = new javax.swing.JLabel();
+        jLabel5 = new javax.swing.JLabel();
+        txtKodeKursi = new javax.swing.JTextField();
+        txtJumlahTiket = new javax.swing.JTextField();
+        jLabel6 = new javax.swing.JLabel();
+        btnBack = new javax.swing.JButton();
+        btnPesan = new javax.swing.JButton();
+        jSeparator2 = new javax.swing.JSeparator();
+        jLabel8 = new javax.swing.JLabel();
+        cmbStudio = new javax.swing.JComboBox<>();
+        jLabel1 = new javax.swing.JLabel();
+        jLabel9 = new javax.swing.JLabel();
+        txtHargaSatuan = new javax.swing.JTextField();
+        txtTotalHarga = new javax.swing.JTextField();
+        jLabel10 = new javax.swing.JLabel();
+        jLabel11 = new javax.swing.JLabel();
+        jLabel12 = new javax.swing.JLabel();
+        bayar = new javax.swing.JLabel();
+        txtKembali = new javax.swing.JTextField();
+        kembali = new javax.swing.JLabel();
+        txtBayar = new javax.swing.JTextField();
+        btnHitung = new javax.swing.JButton();
+        btnCetak = new javax.swing.JButton();
+        pilihMakan = new javax.swing.JLabel();
+        jComboBoxMakan = new javax.swing.JComboBox<>();
+        JumlahMakan = new javax.swing.JLabel();
+        jHargaMakan = new javax.swing.JLabel();
+        jTotalMakan = new javax.swing.JLabel();
+        jTextHargaMakan = new javax.swing.JTextField();
+        jTextJumlahMakan = new javax.swing.JTextField();
+        jTextTotMakan = new javax.swing.JTextField();
+        jTextTotMinum = new javax.swing.JTextField();
+        jTextJumlahMinum = new javax.swing.JTextField();
+        JumlahMinum = new javax.swing.JLabel();
+        jTotalMinum = new javax.swing.JLabel();
+        jTextHargaMinum = new javax.swing.JTextField();
+        jHargaMinum = new javax.swing.JLabel();
+        jComboBoxMinum = new javax.swing.JComboBox<>();
+        pilihMinum = new javax.swing.JLabel();
+        jLabelSeluruh = new javax.swing.JLabel();
+        txtTotalHargaSeluruh = new javax.swing.JTextField();
+        jMenuBar1 = new javax.swing.JMenuBar();
+        FileMenu = new javax.swing.JMenu();
+        mnKasir = new javax.swing.JMenuItem();
+        mnKeluar = new javax.swing.JMenuItem();
+        Edit = new javax.swing.JMenu();
+        mnFilm = new javax.swing.JMenuItem();
+        mnStudio = new javax.swing.JMenuItem();
+        mnTransaksi = new javax.swing.JMenuItem();
+
+        setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
+
+        jTextField1.setEditable(false);
+        jTextField1.setBackground(new java.awt.Color(0, 0, 51));
+        jTextField1.setFont(new java.awt.Font("Tahoma", 0, 14)); // NOI18N
+        jTextField1.setForeground(new java.awt.Color(255, 255, 255));
+        jTextField1.setHorizontalAlignment(javax.swing.JTextField.CENTER);
+        jTextField1.setText("Layar");
+
+        btnA1.setIcon(new javax.swing.ImageIcon(getClass().getResource("/frontEnd/rsz_1rsz_185671-cinema-seat.png"))); // NOI18N
+        btnA1.setText("A1");
+        btnA1.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnA1ActionPerformed(evt);
+            }
+        });
+
+        btnB1.setIcon(new javax.swing.ImageIcon(getClass().getResource("/frontEnd/rsz_1rsz_185671-cinema-seat.png"))); // NOI18N
+        btnB1.setText("B1");
+        btnB1.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnB1ActionPerformed(evt);
+            }
+        });
+
+        btnC1.setIcon(new javax.swing.ImageIcon(getClass().getResource("/frontEnd/rsz_1rsz_185671-cinema-seat.png"))); // NOI18N
+        btnC1.setText("C1");
+        btnC1.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnC1ActionPerformed(evt);
+            }
+        });
+
+        btnD1.setIcon(new javax.swing.ImageIcon(getClass().getResource("/frontEnd/rsz_1rsz_185671-cinema-seat.png"))); // NOI18N
+        btnD1.setText("D1");
+        btnD1.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnD1ActionPerformed(evt);
+            }
+        });
+
+        btnA2.setIcon(new javax.swing.ImageIcon(getClass().getResource("/frontEnd/rsz_1rsz_185671-cinema-seat.png"))); // NOI18N
+        btnA2.setText("A2");
+        btnA2.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnA2ActionPerformed(evt);
+            }
+        });
+
+        btnB2.setIcon(new javax.swing.ImageIcon(getClass().getResource("/frontEnd/rsz_1rsz_185671-cinema-seat.png"))); // NOI18N
+        btnB2.setText("B2");
+        btnB2.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnB2ActionPerformed(evt);
+            }
+        });
+
+        btnC2.setIcon(new javax.swing.ImageIcon(getClass().getResource("/frontEnd/rsz_1rsz_185671-cinema-seat.png"))); // NOI18N
+        btnC2.setText("C2");
+        btnC2.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnC2ActionPerformed(evt);
+            }
+        });
+
+        btnD2.setIcon(new javax.swing.ImageIcon(getClass().getResource("/frontEnd/rsz_1rsz_185671-cinema-seat.png"))); // NOI18N
+        btnD2.setText("D2");
+        btnD2.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnD2ActionPerformed(evt);
+            }
+        });
+
+        btnA3.setIcon(new javax.swing.ImageIcon(getClass().getResource("/frontEnd/rsz_1rsz_185671-cinema-seat.png"))); // NOI18N
+        btnA3.setText("A3");
+        btnA3.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnA3ActionPerformed(evt);
+            }
+        });
+
+        btnB3.setIcon(new javax.swing.ImageIcon(getClass().getResource("/frontEnd/rsz_1rsz_185671-cinema-seat.png"))); // NOI18N
+        btnB3.setText("B3");
+        btnB3.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnB3ActionPerformed(evt);
+            }
+        });
+
+        btnC3.setIcon(new javax.swing.ImageIcon(getClass().getResource("/frontEnd/rsz_1rsz_185671-cinema-seat.png"))); // NOI18N
+        btnC3.setText("C3");
+        btnC3.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnC3ActionPerformed(evt);
+            }
+        });
+
+        btnD3.setIcon(new javax.swing.ImageIcon(getClass().getResource("/frontEnd/rsz_1rsz_185671-cinema-seat.png"))); // NOI18N
+        btnD3.setText("D3");
+        btnD3.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnD3ActionPerformed(evt);
+            }
+        });
+
+        btnA4.setIcon(new javax.swing.ImageIcon(getClass().getResource("/frontEnd/rsz_1rsz_185671-cinema-seat.png"))); // NOI18N
+        btnA4.setText("A4");
+        btnA4.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnA4ActionPerformed(evt);
+            }
+        });
+
+        btnB4.setIcon(new javax.swing.ImageIcon(getClass().getResource("/frontEnd/rsz_1rsz_185671-cinema-seat.png"))); // NOI18N
+        btnB4.setText("B4");
+        btnB4.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnB4ActionPerformed(evt);
+            }
+        });
+
+        btnC4.setIcon(new javax.swing.ImageIcon(getClass().getResource("/frontEnd/rsz_1rsz_185671-cinema-seat.png"))); // NOI18N
+        btnC4.setText("C4");
+        btnC4.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnC4ActionPerformed(evt);
+            }
+        });
+
+        btnD4.setIcon(new javax.swing.ImageIcon(getClass().getResource("/frontEnd/rsz_1rsz_185671-cinema-seat.png"))); // NOI18N
+        btnD4.setText("D4");
+        btnD4.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnD4ActionPerformed(evt);
+            }
+        });
+
+        btnA5.setIcon(new javax.swing.ImageIcon(getClass().getResource("/frontEnd/rsz_1rsz_185671-cinema-seat.png"))); // NOI18N
+        btnA5.setText("A5");
+        btnA5.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnA5ActionPerformed(evt);
+            }
+        });
+
+        btnB5.setIcon(new javax.swing.ImageIcon(getClass().getResource("/frontEnd/rsz_1rsz_185671-cinema-seat.png"))); // NOI18N
+        btnB5.setText("B5");
+        btnB5.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnB5ActionPerformed(evt);
+            }
+        });
+
+        btnA6.setIcon(new javax.swing.ImageIcon(getClass().getResource("/frontEnd/rsz_1rsz_185671-cinema-seat.png"))); // NOI18N
+        btnA6.setText("A6");
+        btnA6.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnA6ActionPerformed(evt);
+            }
+        });
+
+        btnB6.setIcon(new javax.swing.ImageIcon(getClass().getResource("/frontEnd/rsz_1rsz_185671-cinema-seat.png"))); // NOI18N
+        btnB6.setText("B6");
+        btnB6.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnB6ActionPerformed(evt);
+            }
+        });
+
+        btnA7.setIcon(new javax.swing.ImageIcon(getClass().getResource("/frontEnd/rsz_1rsz_185671-cinema-seat.png"))); // NOI18N
+        btnA7.setText("A7");
+        btnA7.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnA7ActionPerformed(evt);
+            }
+        });
+
+        btnA8.setIcon(new javax.swing.ImageIcon(getClass().getResource("/frontEnd/rsz_1rsz_185671-cinema-seat.png"))); // NOI18N
+        btnA8.setText("A8");
+        btnA8.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnA8ActionPerformed(evt);
+            }
+        });
+
+        btnB8.setIcon(new javax.swing.ImageIcon(getClass().getResource("/frontEnd/rsz_1rsz_185671-cinema-seat.png"))); // NOI18N
+        btnB8.setText("B8");
+        btnB8.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnB8ActionPerformed(evt);
+            }
+        });
+
+        btnB7.setIcon(new javax.swing.ImageIcon(getClass().getResource("/frontEnd/rsz_1rsz_185671-cinema-seat.png"))); // NOI18N
+        btnB7.setText("B7");
+        btnB7.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnB7ActionPerformed(evt);
+            }
+        });
+
+        btnC8.setIcon(new javax.swing.ImageIcon(getClass().getResource("/frontEnd/rsz_1rsz_185671-cinema-seat.png"))); // NOI18N
+        btnC8.setText("C8");
+        btnC8.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnC8ActionPerformed(evt);
+            }
+        });
+
+        btnD8.setIcon(new javax.swing.ImageIcon(getClass().getResource("/frontEnd/rsz_1rsz_185671-cinema-seat.png"))); // NOI18N
+        btnD8.setText("D8");
+        btnD8.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnD8ActionPerformed(evt);
+            }
+        });
+
+        btnC7.setIcon(new javax.swing.ImageIcon(getClass().getResource("/frontEnd/rsz_1rsz_185671-cinema-seat.png"))); // NOI18N
+        btnC7.setText("C7");
+        btnC7.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnC7ActionPerformed(evt);
+            }
+        });
+
+        btnD7.setIcon(new javax.swing.ImageIcon(getClass().getResource("/frontEnd/rsz_1rsz_185671-cinema-seat.png"))); // NOI18N
+        btnD7.setText("D7");
+        btnD7.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnD7ActionPerformed(evt);
+            }
+        });
+
+        btnC6.setIcon(new javax.swing.ImageIcon(getClass().getResource("/frontEnd/rsz_1rsz_185671-cinema-seat.png"))); // NOI18N
+        btnC6.setText("C6");
+        btnC6.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnC6ActionPerformed(evt);
+            }
+        });
+
+        btnD6.setIcon(new javax.swing.ImageIcon(getClass().getResource("/frontEnd/rsz_1rsz_185671-cinema-seat.png"))); // NOI18N
+        btnD6.setText("D6");
+        btnD6.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnD6ActionPerformed(evt);
+            }
+        });
+
+        btnC5.setIcon(new javax.swing.ImageIcon(getClass().getResource("/frontEnd/rsz_1rsz_185671-cinema-seat.png"))); // NOI18N
+        btnC5.setText("C5");
+        btnC5.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnC5ActionPerformed(evt);
+            }
+        });
+
+        btnD5.setIcon(new javax.swing.ImageIcon(getClass().getResource("/frontEnd/rsz_1rsz_185671-cinema-seat.png"))); // NOI18N
+        btnD5.setText("D5");
+        btnD5.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnD5ActionPerformed(evt);
+            }
+        });
+
+        btnE1.setIcon(new javax.swing.ImageIcon(getClass().getResource("/frontEnd/rsz_1rsz_185671-cinema-seat.png"))); // NOI18N
+        btnE1.setText("E1");
+        btnE1.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnE1ActionPerformed(evt);
+            }
+        });
+
+        btnF1.setIcon(new javax.swing.ImageIcon(getClass().getResource("/frontEnd/rsz_1rsz_185671-cinema-seat.png"))); // NOI18N
+        btnF1.setText("F1");
+        btnF1.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnF1ActionPerformed(evt);
+            }
+        });
+
+        btnE2.setIcon(new javax.swing.ImageIcon(getClass().getResource("/frontEnd/rsz_1rsz_185671-cinema-seat.png"))); // NOI18N
+        btnE2.setText("E2");
+        btnE2.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnE2ActionPerformed(evt);
+            }
+        });
+
+        btnF2.setIcon(new javax.swing.ImageIcon(getClass().getResource("/frontEnd/rsz_1rsz_185671-cinema-seat.png"))); // NOI18N
+        btnF2.setText("F2");
+        btnF2.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnF2ActionPerformed(evt);
+            }
+        });
+
+        btnE3.setIcon(new javax.swing.ImageIcon(getClass().getResource("/frontEnd/rsz_1rsz_185671-cinema-seat.png"))); // NOI18N
+        btnE3.setText("E3");
+        btnE3.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnE3ActionPerformed(evt);
+            }
+        });
+
+        btnF3.setIcon(new javax.swing.ImageIcon(getClass().getResource("/frontEnd/rsz_1rsz_185671-cinema-seat.png"))); // NOI18N
+        btnF3.setText("F3");
+        btnF3.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnF3ActionPerformed(evt);
+            }
+        });
+
+        btnE4.setIcon(new javax.swing.ImageIcon(getClass().getResource("/frontEnd/rsz_1rsz_185671-cinema-seat.png"))); // NOI18N
+        btnE4.setText("E4");
+        btnE4.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnE4ActionPerformed(evt);
+            }
+        });
+
+        btnF4.setIcon(new javax.swing.ImageIcon(getClass().getResource("/frontEnd/rsz_1rsz_185671-cinema-seat.png"))); // NOI18N
+        btnF4.setText("F4");
+        btnF4.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnF4ActionPerformed(evt);
+            }
+        });
+
+        btnE5.setIcon(new javax.swing.ImageIcon(getClass().getResource("/frontEnd/rsz_1rsz_185671-cinema-seat.png"))); // NOI18N
+        btnE5.setText("E5");
+        btnE5.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnE5ActionPerformed(evt);
+            }
+        });
+
+        btnF5.setIcon(new javax.swing.ImageIcon(getClass().getResource("/frontEnd/rsz_1rsz_185671-cinema-seat.png"))); // NOI18N
+        btnF5.setText("F5");
+        btnF5.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnF5ActionPerformed(evt);
+            }
+        });
+
+        btnE6.setIcon(new javax.swing.ImageIcon(getClass().getResource("/frontEnd/rsz_1rsz_185671-cinema-seat.png"))); // NOI18N
+        btnE6.setText("E6");
+        btnE6.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnE6ActionPerformed(evt);
+            }
+        });
+
+        btnF6.setIcon(new javax.swing.ImageIcon(getClass().getResource("/frontEnd/rsz_1rsz_185671-cinema-seat.png"))); // NOI18N
+        btnF6.setText("F6");
+        btnF6.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnF6ActionPerformed(evt);
+            }
+        });
+
+        btnE7.setIcon(new javax.swing.ImageIcon(getClass().getResource("/frontEnd/rsz_1rsz_185671-cinema-seat.png"))); // NOI18N
+        btnE7.setText("E7");
+        btnE7.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnE7ActionPerformed(evt);
+            }
+        });
+
+        btnE8.setIcon(new javax.swing.ImageIcon(getClass().getResource("/frontEnd/rsz_1rsz_185671-cinema-seat.png"))); // NOI18N
+        btnE8.setText("E8");
+        btnE8.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnE8ActionPerformed(evt);
+            }
+        });
+
+        btnF8.setIcon(new javax.swing.ImageIcon(getClass().getResource("/frontEnd/rsz_1rsz_185671-cinema-seat.png"))); // NOI18N
+        btnF8.setText("F8");
+        btnF8.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnF8ActionPerformed(evt);
+            }
+        });
+
+        btnF7.setIcon(new javax.swing.ImageIcon(getClass().getResource("/frontEnd/rsz_1rsz_185671-cinema-seat.png"))); // NOI18N
+        btnF7.setText("F7");
+        btnF7.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnF7ActionPerformed(evt);
+            }
+        });
+
+        Film.setText("Film");
+
+        cmbListFilm.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Item 1", "Item 2", "Item 3", "Item 4" }));
+        cmbListFilm.setSelectedIndex(-1);
+        cmbListFilm.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                cmbListFilmActionPerformed(evt);
+            }
+        });
+
+        jLabel7.setText("Hari");
+
+        cmbListHari.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Senin", "Selasa", "Rabu", "Kamis", "Jumat", "Sabtu", "Minggu" }));
+        cmbListHari.setSelectedIndex(-1);
+
+        jLabel3.setText("jam");
+
+        cmbJam.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Item 1", "Item 2", "Item 3", "Item 4" }));
+        cmbJam.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                cmbJamActionPerformed(evt);
+            }
+        });
+
+        jLabel4.setText("Studio");
+
+        jLabel5.setText("Kursi");
+
+        txtKodeKursi.setEditable(false);
+        txtKodeKursi.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                txtKodeKursiActionPerformed(evt);
+            }
+        });
+
+        txtJumlahTiket.setEditable(false);
+
+        jLabel6.setText("Jumlah");
+
+        btnBack.setText("Reset");
+        btnBack.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnBackActionPerformed(evt);
+            }
+        });
+
+        btnPesan.setText("Pesan");
+        btnPesan.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnPesanActionPerformed(evt);
+            }
+        });
+
+        jSeparator2.setOrientation(javax.swing.SwingConstants.VERTICAL);
+
+        jLabel8.setFont(new java.awt.Font("Times New Roman", 0, 18)); // NOI18N
+        jLabel8.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
+        jLabel8.setText("BOOKING");
+
+        cmbStudio.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Item 1", "Item 2", "Item 3", "Item 4" }));
+
+        jLabel1.setText("Harga Satuan Tiket");
+
+        jLabel9.setText("Total Harga");
+
+        txtHargaSatuan.setEditable(false);
+        txtHargaSatuan.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                txtHargaSatuanActionPerformed(evt);
+            }
+        });
+
+        txtTotalHarga.setEditable(false);
+
+        jLabel10.setText("Harga");
+
+        jLabel11.setText("Weekday : RP. 35000");
+
+        jLabel12.setText("Weekend : Rp. 45000");
+
+        bayar.setText("Bayar");
+
+        txtKembali.setEditable(false);
+
+        kembali.setText("Kembali");
+
+        txtBayar.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                txtBayarActionPerformed(evt);
+            }
+        });
+
+        btnHitung.setText("enter");
+        btnHitung.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnHitungActionPerformed(evt);
+            }
+        });
+
+        btnCetak.setText("Cetak");
+        btnCetak.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnCetakActionPerformed(evt);
+            }
+        });
+
+        pilihMakan.setText("Pilih Makanan");
+
+        jComboBoxMakan.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Item 1", "Item 2", "Item 3", "Item 4" }));
+        jComboBoxMakan.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                jComboBoxMakanMouseClicked(evt);
+            }
+        });
+        jComboBoxMakan.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jComboBoxMakanActionPerformed(evt);
+            }
+        });
+
+        JumlahMakan.setText("Jumlah");
+
+        jHargaMakan.setText("Harga");
+
+        jTotalMakan.setText("Total");
+
+        jTextHargaMakan.setEnabled(false);
+
+        jTextJumlahMakan.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jTextJumlahMakanActionPerformed(evt);
+            }
+        });
+        jTextJumlahMakan.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyTyped(java.awt.event.KeyEvent evt) {
+                jTextJumlahMakanKeyTyped(evt);
+            }
+        });
+
+        jTextTotMakan.setEnabled(false);
+
+        jTextTotMinum.setEnabled(false);
+
+        jTextJumlahMinum.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jTextJumlahMinumActionPerformed(evt);
+            }
+        });
+
+        JumlahMinum.setText("Jumlah");
+
+        jTotalMinum.setText("Total");
+
+        jTextHargaMinum.setEnabled(false);
+
+        jHargaMinum.setText("Harga");
+
+        jComboBoxMinum.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Item 1", "Item 2", "Item 3", "Item 4" }));
+        jComboBoxMinum.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jComboBoxMinumActionPerformed(evt);
+            }
+        });
+
+        pilihMinum.setText("Pilih Minuman");
+
+        jLabelSeluruh.setText("Total Keseluruhan");
+
+        txtTotalHargaSeluruh.setEditable(false);
+
+        FileMenu.setText("File");
+
+        mnKasir.setText("Kasir");
+        mnKasir.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                mnKasirActionPerformed(evt);
+            }
+        });
+        FileMenu.add(mnKasir);
+
+        mnKeluar.setText("Keluar");
+        FileMenu.add(mnKeluar);
+
+        jMenuBar1.add(FileMenu);
+
+        Edit.setText("Edit");
+
+        mnFilm.setText("Film");
+        mnFilm.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                mnFilmActionPerformed(evt);
+            }
+        });
+        Edit.add(mnFilm);
+
+        mnStudio.setText("Studio");
+        mnStudio.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                mnStudioActionPerformed(evt);
+            }
+        });
+        Edit.add(mnStudio);
+
+        mnTransaksi.setText("Transaksi");
+        mnTransaksi.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                mnTransaksiActionPerformed(evt);
+            }
+        });
+        Edit.add(mnTransaksi);
+
+        jMenuBar1.add(Edit);
+
+        setJMenuBar(jMenuBar1);
+
+        javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
+        getContentPane().setLayout(layout);
+        layout.setHorizontalGroup(
+            layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(layout.createSequentialGroup()
+                .addContainerGap()
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(layout.createSequentialGroup()
+                        .addGap(2, 2, 2)
+                        .addComponent(jTextField1, javax.swing.GroupLayout.PREFERRED_SIZE, 741, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                        .addGroup(layout.createSequentialGroup()
+                            .addComponent(btnA1)
+                            .addGap(4, 4, 4)
+                            .addComponent(btnA2)
+                            .addGap(21, 21, 21)
+                            .addComponent(btnA3)
+                            .addGap(16, 16, 16)
+                            .addComponent(btnA4))
+                        .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                            .addComponent(btnB1, javax.swing.GroupLayout.PREFERRED_SIZE, 73, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                            .addComponent(btnB2)
+                            .addGap(23, 23, 23)
+                            .addComponent(btnB3, javax.swing.GroupLayout.PREFERRED_SIZE, 73, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addGap(18, 18, 18)
+                            .addComponent(btnB4, javax.swing.GroupLayout.PREFERRED_SIZE, 73, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addGap(45, 45, 45)
+                            .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                                .addGroup(layout.createSequentialGroup()
+                                    .addComponent(btnB5, javax.swing.GroupLayout.PREFERRED_SIZE, 73, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                    .addGap(18, 18, 18)
+                                    .addComponent(btnB6, javax.swing.GroupLayout.PREFERRED_SIZE, 73, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                    .addGap(27, 27, 27)
+                                    .addComponent(btnB7, javax.swing.GroupLayout.PREFERRED_SIZE, 73, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                    .addGap(18, 18, 18)
+                                    .addComponent(btnB8, javax.swing.GroupLayout.PREFERRED_SIZE, 73, javax.swing.GroupLayout.PREFERRED_SIZE))
+                                .addGroup(layout.createSequentialGroup()
+                                    .addComponent(btnA5)
+                                    .addGap(16, 16, 16)
+                                    .addComponent(btnA6)
+                                    .addGap(25, 25, 25)
+                                    .addComponent(btnA7)
+                                    .addGap(16, 16, 16)
+                                    .addComponent(btnA8))))
+                        .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                            .addComponent(btnC1)
+                            .addGap(4, 4, 4)
+                            .addComponent(btnC2)
+                            .addGap(18, 18, 18)
+                            .addComponent(btnC3)
+                            .addGap(18, 18, 18)
+                            .addComponent(btnC4)
+                            .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                            .addComponent(btnC5)
+                            .addGap(16, 16, 16)
+                            .addComponent(btnC6)
+                            .addGap(25, 25, 25)
+                            .addComponent(btnC7)
+                            .addGap(16, 16, 16)
+                            .addComponent(btnC8))
+                        .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                            .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                                .addGroup(layout.createSequentialGroup()
+                                    .addGap(2, 2, 2)
+                                    .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                        .addGroup(layout.createSequentialGroup()
+                                            .addGap(265, 265, 265)
+                                            .addComponent(btnD4, javax.swing.GroupLayout.PREFERRED_SIZE, 76, javax.swing.GroupLayout.PREFERRED_SIZE))
+                                        .addGroup(layout.createSequentialGroup()
+                                            .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                                                    .addComponent(btnE3, javax.swing.GroupLayout.PREFERRED_SIZE, 74, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                                    .addGroup(javax.swing.GroupLayout.Alignment.LEADING, layout.createSequentialGroup()
+                                                        .addComponent(btnD1)
+                                                        .addGap(4, 4, 4)
+                                                        .addComponent(btnD2)
+                                                        .addGap(18, 18, 18)
+                                                        .addComponent(btnD3)))
+                                                .addGroup(layout.createSequentialGroup()
+                                                    .addGap(172, 172, 172)
+                                                    .addComponent(btnF3, javax.swing.GroupLayout.PREFERRED_SIZE, 73, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                                            .addGap(18, 18, 18)
+                                            .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                                .addComponent(btnF4, javax.swing.GroupLayout.PREFERRED_SIZE, 73, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                                .addComponent(btnE4, javax.swing.GroupLayout.PREFERRED_SIZE, 73, javax.swing.GroupLayout.PREFERRED_SIZE)))))
+                                .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                                    .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                        .addComponent(btnE1, javax.swing.GroupLayout.PREFERRED_SIZE, 73, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                        .addComponent(btnF1, javax.swing.GroupLayout.PREFERRED_SIZE, 73, javax.swing.GroupLayout.PREFERRED_SIZE))
+                                    .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                    .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                        .addComponent(btnF2, javax.swing.GroupLayout.PREFERRED_SIZE, 73, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                        .addComponent(btnE2, javax.swing.GroupLayout.PREFERRED_SIZE, 77, javax.swing.GroupLayout.PREFERRED_SIZE))
+                                    .addGap(187, 187, 187)))
+                            .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                            .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                .addGroup(layout.createSequentialGroup()
+                                    .addComponent(btnD5)
+                                    .addGap(16, 16, 16)
+                                    .addComponent(btnD6)
+                                    .addGap(25, 25, 25)
+                                    .addComponent(btnD7)
+                                    .addGap(16, 16, 16)
+                                    .addComponent(btnD8))
+                                .addGroup(layout.createSequentialGroup()
+                                    .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                                        .addComponent(btnF5, javax.swing.GroupLayout.PREFERRED_SIZE, 73, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                        .addComponent(btnE5, javax.swing.GroupLayout.PREFERRED_SIZE, 73, javax.swing.GroupLayout.PREFERRED_SIZE))
+                                    .addGap(18, 18, 18)
+                                    .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                        .addComponent(btnE6, javax.swing.GroupLayout.PREFERRED_SIZE, 73, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                        .addComponent(btnF6, javax.swing.GroupLayout.PREFERRED_SIZE, 73, javax.swing.GroupLayout.PREFERRED_SIZE))
+                                    .addGap(27, 27, 27)
+                                    .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                                        .addComponent(btnE7, javax.swing.GroupLayout.PREFERRED_SIZE, 73, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                        .addComponent(btnF7, javax.swing.GroupLayout.PREFERRED_SIZE, 73, javax.swing.GroupLayout.PREFERRED_SIZE))
+                                    .addGap(18, 18, 18)
+                                    .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                        .addComponent(btnE8, javax.swing.GroupLayout.PREFERRED_SIZE, 73, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                        .addComponent(btnF8, javax.swing.GroupLayout.PREFERRED_SIZE, 73, javax.swing.GroupLayout.PREFERRED_SIZE))))))
+                    .addComponent(jSeparator1, javax.swing.GroupLayout.PREFERRED_SIZE, 739, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addGroup(layout.createSequentialGroup()
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(kembali)
+                            .addComponent(bayar))
+                        .addGap(74, 74, 74)
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addGroup(layout.createSequentialGroup()
+                                .addComponent(txtBayar, javax.swing.GroupLayout.PREFERRED_SIZE, 104, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(btnHitung))
+                            .addComponent(txtKembali, javax.swing.GroupLayout.PREFERRED_SIZE, 104, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                    .addGroup(layout.createSequentialGroup()
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                            .addGroup(layout.createSequentialGroup()
+                                .addComponent(jLabel10)
+                                .addGap(18, 18, 18)
+                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                    .addComponent(jLabel11)
+                                    .addComponent(jLabel12)))
+                            .addGroup(layout.createSequentialGroup()
+                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                    .addComponent(jLabel1)
+                                    .addComponent(jLabel9))
+                                .addGap(18, 18, 18)
+                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                                    .addComponent(txtHargaSatuan)
+                                    .addComponent(txtTotalHarga, javax.swing.GroupLayout.PREFERRED_SIZE, 163, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                                .addComponent(jLabelSeluruh)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                .addComponent(txtTotalHargaSeluruh, javax.swing.GroupLayout.PREFERRED_SIZE, 163, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                        .addGap(36, 36, 36)
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(pilihMakan)
+                            .addComponent(jHargaMakan)
+                            .addComponent(JumlahMakan)
+                            .addComponent(jTotalMakan))
+                        .addGap(18, 18, 18)
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                                .addComponent(jComboBoxMakan, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                .addComponent(jTextHargaMakan)
+                                .addComponent(jTextTotMakan, javax.swing.GroupLayout.PREFERRED_SIZE, 105, javax.swing.GroupLayout.PREFERRED_SIZE))
+                            .addComponent(jTextJumlahMakan, javax.swing.GroupLayout.PREFERRED_SIZE, 60, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addGap(42, 42, 42)
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(pilihMinum)
+                            .addComponent(jHargaMinum)
+                            .addComponent(JumlahMinum)
+                            .addComponent(jTotalMinum))
+                        .addGap(18, 18, 18)
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                                .addComponent(jComboBoxMinum, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                .addComponent(jTextHargaMinum)
+                                .addComponent(jTextTotMinum, javax.swing.GroupLayout.PREFERRED_SIZE, 105, javax.swing.GroupLayout.PREFERRED_SIZE))
+                            .addComponent(jTextJumlahMinum, javax.swing.GroupLayout.PREFERRED_SIZE, 60, javax.swing.GroupLayout.PREFERRED_SIZE))))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 38, Short.MAX_VALUE)
+                .addComponent(jSeparator2, javax.swing.GroupLayout.PREFERRED_SIZE, 28, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
+                        .addGroup(layout.createSequentialGroup()
+                            .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                            .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                                    .addComponent(Film)
+                                    .addComponent(jLabel7)
+                                    .addComponent(jLabel5)
+                                    .addComponent(jLabel6)
+                                    .addComponent(btnBack, javax.swing.GroupLayout.PREFERRED_SIZE, 88, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                    .addComponent(txtJumlahTiket, javax.swing.GroupLayout.DEFAULT_SIZE, 235, Short.MAX_VALUE)
+                                    .addComponent(txtKodeKursi)
+                                    .addComponent(jLabel8, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                    .addComponent(cmbJam, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                    .addComponent(cmbListHari, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                    .addComponent(cmbListFilm, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                    .addComponent(cmbStudio, javax.swing.GroupLayout.Alignment.TRAILING, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                                .addComponent(btnPesan, javax.swing.GroupLayout.PREFERRED_SIZE, 88, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addComponent(btnCetak, javax.swing.GroupLayout.PREFERRED_SIZE, 88, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                        .addGroup(layout.createSequentialGroup()
+                            .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                            .addComponent(jLabel4)
+                            .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                            .addComponent(jLabel2)))
+                    .addGroup(layout.createSequentialGroup()
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(jLabel3)))
+                .addContainerGap())
+        );
+        layout.setVerticalGroup(
+            layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(layout.createSequentialGroup()
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(layout.createSequentialGroup()
+                        .addGap(245, 245, 245)
+                        .addComponent(jLabel2, javax.swing.GroupLayout.PREFERRED_SIZE, 24, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addGroup(layout.createSequentialGroup()
+                        .addGap(31, 31, 31)
+                        .addComponent(jTextField1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(41, 41, 41)
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                                .addComponent(btnA1)
+                                .addComponent(btnA3)
+                                .addComponent(btnA4)
+                                .addComponent(btnA2))
+                            .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                                .addComponent(btnA8)
+                                .addComponent(btnA5)
+                                .addComponent(btnA7)
+                                .addComponent(btnA6)))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                                .addComponent(btnB1)
+                                .addComponent(btnB3)
+                                .addComponent(btnB4)
+                                .addComponent(btnB2))
+                            .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                                .addComponent(btnB8)
+                                .addComponent(btnB5)
+                                .addComponent(btnB7)
+                                .addComponent(btnB6)))
+                        .addGap(11, 11, 11)
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                                .addComponent(btnC1)
+                                .addComponent(btnC3)
+                                .addComponent(btnC4)
+                                .addComponent(btnC2))
+                            .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                                .addComponent(btnC8)
+                                .addComponent(btnC5)
+                                .addComponent(btnC7)
+                                .addComponent(btnC6)))
+                        .addGap(51, 51, 51)
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                                .addComponent(btnD1)
+                                .addComponent(btnD3)
+                                .addComponent(btnD4)
+                                .addComponent(btnD2))
+                            .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                                .addComponent(btnD8)
+                                .addComponent(btnD5)
+                                .addComponent(btnD7)
+                                .addComponent(btnD6)))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addGroup(layout.createSequentialGroup()
+                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                                    .addComponent(btnE8)
+                                    .addComponent(btnE5)
+                                    .addComponent(btnE7)
+                                    .addComponent(btnE6))
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                    .addComponent(btnF5)
+                                    .addComponent(btnF6)
+                                    .addComponent(btnF7)
+                                    .addComponent(btnF8)))
+                            .addGroup(layout.createSequentialGroup()
+                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                                    .addComponent(btnE1)
+                                    .addComponent(btnE3)
+                                    .addComponent(btnE4)
+                                    .addComponent(btnE2))
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                    .addComponent(btnF4)
+                                    .addComponent(btnF3)
+                                    .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                                        .addComponent(btnF2)
+                                        .addComponent(btnF1)))))))
+                .addGap(18, 18, 18)
+                .addComponent(jSeparator1, javax.swing.GroupLayout.PREFERRED_SIZE, 10, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(layout.createSequentialGroup()
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                            .addComponent(jLabel10)
+                            .addComponent(jLabel11))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(jLabel12)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                            .addComponent(jLabel1)
+                            .addComponent(txtHargaSatuan, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                            .addComponent(jLabel9)
+                            .addComponent(txtTotalHarga, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                            .addComponent(jLabelSeluruh)
+                            .addComponent(txtTotalHargaSeluruh, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 8, Short.MAX_VALUE)
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                            .addComponent(bayar)
+                            .addComponent(txtBayar, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(btnHitung))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                            .addComponent(kembali)
+                            .addComponent(txtKembali, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addContainerGap())
+                    .addGroup(layout.createSequentialGroup()
+                        .addGap(3, 3, 3)
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addGroup(layout.createSequentialGroup()
+                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                                    .addComponent(pilihMinum)
+                                    .addComponent(jComboBoxMinum, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                                    .addComponent(jHargaMinum)
+                                    .addComponent(jTextHargaMinum, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                    .addGroup(layout.createSequentialGroup()
+                                        .addGap(11, 11, 11)
+                                        .addComponent(JumlahMinum)
+                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                                        .addComponent(jTotalMinum))
+                                    .addGroup(layout.createSequentialGroup()
+                                        .addGap(6, 6, 6)
+                                        .addComponent(jTextJumlahMinum, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                                        .addComponent(jTextTotMinum, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))))
+                            .addGroup(layout.createSequentialGroup()
+                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                                    .addComponent(pilihMakan)
+                                    .addComponent(jComboBoxMakan, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                                    .addComponent(jHargaMakan)
+                                    .addComponent(jTextHargaMakan, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                    .addGroup(layout.createSequentialGroup()
+                                        .addGap(11, 11, 11)
+                                        .addComponent(JumlahMakan)
+                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                                        .addComponent(jTotalMakan))
+                                    .addGroup(layout.createSequentialGroup()
+                                        .addGap(6, 6, 6)
+                                        .addComponent(jTextJumlahMakan, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                                        .addComponent(jTextTotMakan, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))))
+                        .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))))
+            .addGroup(layout.createSequentialGroup()
+                .addGap(53, 53, 53)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(jSeparator2)
+                    .addGroup(layout.createSequentialGroup()
+                        .addComponent(jLabel8)
+                        .addGap(36, 36, 36)
+                        .addComponent(Film)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(cmbListFilm, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(jLabel7)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(cmbListHari, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(jLabel3)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(cmbJam, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(jLabel4)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(cmbStudio, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(jLabel5)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(txtKodeKursi, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(jLabel6)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(txtJumlahTiket, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(btnPesan, javax.swing.GroupLayout.PREFERRED_SIZE, 32, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(btnBack, javax.swing.GroupLayout.PREFERRED_SIZE, 32, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(btnCetak, javax.swing.GroupLayout.PREFERRED_SIZE, 32, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addContainerGap())))
+        );
+
+        pack();
+    }// </editor-fold>//GEN-END:initComponents
+
+    private void btnC4ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnC4ActionPerformed
+        // TODO add your handling code here:
+        String kode = "C4";
+        setTombol(kode, cmbListFilm.getSelectedItem().toString());
+        if (!isBooking(kode, cmbListFilm.getSelectedItem().toString())) {
+            showKursi();
+        }
+    }//GEN-LAST:event_btnC4ActionPerformed
+
+    private void btnD4ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnD4ActionPerformed
+        // TODO add your handling code here:
+        String kode = "D4";
+        setTombol(kode, cmbListFilm.getSelectedItem().toString());
+        if (!isBooking(kode, cmbListFilm.getSelectedItem().toString())) {
+            showKursi();
+        }
+    }//GEN-LAST:event_btnD4ActionPerformed
+
+    private void btnB8ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnB8ActionPerformed
+        String kode = "B8";
+        setTombol(kode, cmbListFilm.getSelectedItem().toString());
+        if (!isBooking(kode, cmbListFilm.getSelectedItem().toString())) {
+            showKursi();
+        }
+    }//GEN-LAST:event_btnB8ActionPerformed
+
+    private void btnF8ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnF8ActionPerformed
+       // TODO add your handling code here:
+       String kode = "F8";
+        setTombol(kode, cmbListFilm.getSelectedItem().toString());
+        if (!isBooking(kode, cmbListFilm.getSelectedItem().toString())) {
+            showKursi();
+        }
+    }//GEN-LAST:event_btnF8ActionPerformed
+
+    private void btnA1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnA1ActionPerformed
+        // TODO add your handling code here:
+        String kode = "A1";
+        setTombol(kode, cmbListFilm.getSelectedItem().toString());
+        if (!isBooking(kode, cmbListFilm.getSelectedItem().toString())) {
+            showKursi();
+        }
+    }//GEN-LAST:event_btnA1ActionPerformed
+
+    private void btnA2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnA2ActionPerformed
+        // TODO add your handling code here:
+        String kode = "A2";
+        setTombol(kode, cmbListFilm.getSelectedItem().toString());
+        if (!isBooking(kode, cmbListFilm.getSelectedItem().toString())) {
+            showKursi();
+        }
+    }//GEN-LAST:event_btnA2ActionPerformed
+
+    private void btnA3ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnA3ActionPerformed
+        // TODO add your handling code here:
+        String kode = "A3";
+        setTombol(kode, cmbListFilm.getSelectedItem().toString());
+        if (!isBooking(kode, cmbListFilm.getSelectedItem().toString())) {
+            showKursi();
+        }
+    }//GEN-LAST:event_btnA3ActionPerformed
+
+    private void btnA4ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnA4ActionPerformed
+        // TODO add your handling code here:
+        String kode = "A4";
+        setTombol(kode, cmbListFilm.getSelectedItem().toString());
+        if (!isBooking(kode, cmbListFilm.getSelectedItem().toString())) {
+            showKursi();
+        }
+    }//GEN-LAST:event_btnA4ActionPerformed
+
+    private void btnA5ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnA5ActionPerformed
+        // TODO add your handling code here:
+        String kode = "A5";
+        setTombol(kode, cmbListFilm.getSelectedItem().toString());
+        if (!isBooking(kode, cmbListFilm.getSelectedItem().toString())) {
+            showKursi();
+        }
+    }//GEN-LAST:event_btnA5ActionPerformed
+
+    private void btnA6ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnA6ActionPerformed
+        // TODO add your handling code here:
+        String kode = "A6";
+        setTombol(kode, cmbListFilm.getSelectedItem().toString());
+        if (!isBooking(kode, cmbListFilm.getSelectedItem().toString())) {
+            showKursi();
+        }
+    }//GEN-LAST:event_btnA6ActionPerformed
+
+    private void btnA7ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnA7ActionPerformed
+       // TODO add your handling code here:
+       String kode = "A7";
+        setTombol(kode, cmbListFilm.getSelectedItem().toString());
+        if (!isBooking(kode, cmbListFilm.getSelectedItem().toString())) {
+            showKursi();
+        }
+    }//GEN-LAST:event_btnA7ActionPerformed
+
+    private void btnA8ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnA8ActionPerformed
+       // TODO add your handling code here:
+       String kode = "A8";
+        setTombol(kode, cmbListFilm.getSelectedItem().toString());
+        if (!isBooking(kode, cmbListFilm.getSelectedItem().toString())) {
+            showKursi();
+        }
+    }//GEN-LAST:event_btnA8ActionPerformed
+
+    private void btnB1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnB1ActionPerformed
+        // TODO add your handling code here:
+        String kode = "B1";
+        setTombol(kode, cmbListFilm.getSelectedItem().toString());
+        if (!isBooking(kode, cmbListFilm.getSelectedItem().toString())) {
+            showKursi();
+        }
+    }//GEN-LAST:event_btnB1ActionPerformed
+
+    private void btnB2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnB2ActionPerformed
+       // TODO add your handling code here:
+       String kode = "B2";
+        setTombol(kode, cmbListFilm.getSelectedItem().toString());
+        if (!isBooking(kode, cmbListFilm.getSelectedItem().toString())) {
+            showKursi();
+        }
+    }//GEN-LAST:event_btnB2ActionPerformed
+
+    private void btnB3ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnB3ActionPerformed
+      // TODO add your handling code here:
+      String kode = "B3";
+        setTombol(kode, cmbListFilm.getSelectedItem().toString());
+        if (!isBooking(kode, cmbListFilm.getSelectedItem().toString())) {
+            showKursi();
+        }
+    }//GEN-LAST:event_btnB3ActionPerformed
+
+    private void btnB4ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnB4ActionPerformed
+        // TODO add your handling code here:
+        String kode = "B4";
+        setTombol(kode, cmbListFilm.getSelectedItem().toString());
+        if (!isBooking(kode, cmbListFilm.getSelectedItem().toString())) {
+            showKursi();
+        }
+    }//GEN-LAST:event_btnB4ActionPerformed
+
+    private void btnB5ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnB5ActionPerformed
+        // TODO add your handling code here:
+        String kode = "B5";
+        setTombol(kode, cmbListFilm.getSelectedItem().toString());
+        if (!isBooking(kode, cmbListFilm.getSelectedItem().toString())) {
+            showKursi();
+        }
+    }//GEN-LAST:event_btnB5ActionPerformed
+
+    private void btnB6ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnB6ActionPerformed
+        // TODO add your handling code here:
+        String kode = "B6";
+        setTombol(kode, cmbListFilm.getSelectedItem().toString());
+        if (!isBooking(kode, cmbListFilm.getSelectedItem().toString())) {
+            showKursi();
+        }
+    }//GEN-LAST:event_btnB6ActionPerformed
+
+    private void btnB7ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnB7ActionPerformed
+        // TODO add your handling code here:
+        String kode = "B7";
+        setTombol(kode, cmbListFilm.getSelectedItem().toString());
+        if (!isBooking(kode, cmbListFilm.getSelectedItem().toString())) {
+            showKursi();
+        }
+    }//GEN-LAST:event_btnB7ActionPerformed
+
+    private void btnC1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnC1ActionPerformed
+        // TODO add your handling code here:
+        String kode = "C1";
+        setTombol(kode, cmbListFilm.getSelectedItem().toString());
+        if (!isBooking(kode, cmbListFilm.getSelectedItem().toString())) {
+            showKursi();
+        }
+    }//GEN-LAST:event_btnC1ActionPerformed
+
+    private void btnC2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnC2ActionPerformed
+      // TODO add your handling code here:
+      String kode = "C2";
+        setTombol(kode, cmbListFilm.getSelectedItem().toString());
+        if (!isBooking(kode, cmbListFilm.getSelectedItem().toString())) {
+            showKursi();
+        }
+    }//GEN-LAST:event_btnC2ActionPerformed
+
+    private void btnC3ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnC3ActionPerformed
+       // TODO add your handling code here:
+       String kode = "C3";
+        setTombol(kode, cmbListFilm.getSelectedItem().toString());
+        if (!isBooking(kode, cmbListFilm.getSelectedItem().toString())) {
+            showKursi();
+        }
+    }//GEN-LAST:event_btnC3ActionPerformed
+
+    private void btnC5ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnC5ActionPerformed
+        // TODO add your handling code here:
+        String kode = "C5";
+        setTombol(kode, cmbListFilm.getSelectedItem().toString());
+        if (!isBooking(kode, cmbListFilm.getSelectedItem().toString())) {
+            showKursi();
+        }
+    }//GEN-LAST:event_btnC5ActionPerformed
+
+    private void btnC6ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnC6ActionPerformed
+       // TODO add your handling code here:
+       String kode = "C6";
+        setTombol(kode, cmbListFilm.getSelectedItem().toString());
+        if (!isBooking(kode, cmbListFilm.getSelectedItem().toString())) {
+            showKursi();
+        }
+    }//GEN-LAST:event_btnC6ActionPerformed
+
+    private void btnC7ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnC7ActionPerformed
+        // TODO add your handling code here:
+        String kode = "C7";
+        setTombol(kode, cmbListFilm.getSelectedItem().toString());
+        if (!isBooking(kode, cmbListFilm.getSelectedItem().toString())) {
+            showKursi();
+        }
+    }//GEN-LAST:event_btnC7ActionPerformed
+
+    private void btnC8ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnC8ActionPerformed
+       // TODO add your handling code here:
+       String kode = "C8";
+        setTombol(kode, cmbListFilm.getSelectedItem().toString());
+        if (!isBooking(kode, cmbListFilm.getSelectedItem().toString())) {
+            showKursi();
+        }
+    }//GEN-LAST:event_btnC8ActionPerformed
+
+    private void btnD1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnD1ActionPerformed
+       // TODO add your handling code here:
+       String kode = "D1";
+        setTombol(kode, cmbListFilm.getSelectedItem().toString());
+        if (!isBooking(kode, cmbListFilm.getSelectedItem().toString())) {
+            showKursi();
+        }
+    }//GEN-LAST:event_btnD1ActionPerformed
+
+    private void btnD2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnD2ActionPerformed
+      // TODO add your handling code here:
+      String kode = "D2";
+        setTombol(kode, cmbListFilm.getSelectedItem().toString());
+        if (!isBooking(kode, cmbListFilm.getSelectedItem().toString())) {
+            showKursi();
+        }
+    }//GEN-LAST:event_btnD2ActionPerformed
+
+    private void btnD3ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnD3ActionPerformed
+      // TODO add your handling code here:
+      String kode = "D3";
+        setTombol(kode, cmbListFilm.getSelectedItem().toString());
+        if (!isBooking(kode, cmbListFilm.getSelectedItem().toString())) {
+            showKursi();
+        }
+    }//GEN-LAST:event_btnD3ActionPerformed
+
+    private void btnD5ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnD5ActionPerformed
+        // TODO add your handling code here:
+        String kode = "D5";
+        setTombol(kode, cmbListFilm.getSelectedItem().toString());
+        if (!isBooking(kode, cmbListFilm.getSelectedItem().toString())) {
+            showKursi();
+        }
+    }//GEN-LAST:event_btnD5ActionPerformed
+
+    private void btnD6ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnD6ActionPerformed
+       // TODO add your handling code here:
+       String kode = "D6";
+        setTombol(kode, cmbListFilm.getSelectedItem().toString());
+        if (!isBooking(kode, cmbListFilm.getSelectedItem().toString())) {
+            showKursi();
+        }
+    }//GEN-LAST:event_btnD6ActionPerformed
+
+    private void btnD7ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnD7ActionPerformed
+      // TODO add your handling code here:
+      String kode = "D7";
+        setTombol(kode, cmbListFilm.getSelectedItem().toString());
+        if (!isBooking(kode, cmbListFilm.getSelectedItem().toString())) {
+            showKursi();
+        }
+    }//GEN-LAST:event_btnD7ActionPerformed
+
+    private void btnD8ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnD8ActionPerformed
+        // TODO add your handling code here:
+        String kode = "D8";
+        setTombol(kode, cmbListFilm.getSelectedItem().toString());
+        if (!isBooking(kode, cmbListFilm.getSelectedItem().toString())) {
+            showKursi();
+        }
+    }//GEN-LAST:event_btnD8ActionPerformed
+
+    private void btnE1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnE1ActionPerformed
+       // TODO add your handling code here:
+       String kode = "E1";
+        setTombol(kode, cmbListFilm.getSelectedItem().toString());
+        if (!isBooking(kode, cmbListFilm.getSelectedItem().toString())) {
+            showKursi();
+        }
+    }//GEN-LAST:event_btnE1ActionPerformed
+
+    private void btnE2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnE2ActionPerformed
+       // TODO add your handling code here:
+       String kode = "E2";
+        setTombol(kode, cmbListFilm.getSelectedItem().toString());
+        if (!isBooking(kode, cmbListFilm.getSelectedItem().toString())) {
+            showKursi();
+        }
+    }//GEN-LAST:event_btnE2ActionPerformed
+
+    private void btnE3ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnE3ActionPerformed
+        // TODO add your handling code here:
+        String kode = "E3";
+        setTombol(kode, cmbListFilm.getSelectedItem().toString());
+        if (!isBooking(kode, cmbListFilm.getSelectedItem().toString())) {
+            showKursi();
+        }
+    }//GEN-LAST:event_btnE3ActionPerformed
+
+    private void btnE4ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnE4ActionPerformed
+        // TODO add your handling code here:
+        String kode = "E4";
+        setTombol(kode, cmbListFilm.getSelectedItem().toString());
+        if (!isBooking(kode, cmbListFilm.getSelectedItem().toString())) {
+            showKursi();
+        }
+    }//GEN-LAST:event_btnE4ActionPerformed
+
+    private void btnE5ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnE5ActionPerformed
+        // TODO add your handling code here:
+        String kode = "E5";
+        setTombol(kode, cmbListFilm.getSelectedItem().toString());
+        if (!isBooking(kode, cmbListFilm.getSelectedItem().toString())) {
+            showKursi();
+        }
+    }//GEN-LAST:event_btnE5ActionPerformed
+
+    private void btnE6ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnE6ActionPerformed
+      // TODO add your handling code here:
+      String kode = "E6";
+        setTombol(kode, cmbListFilm.getSelectedItem().toString());
+        if (!isBooking(kode, cmbListFilm.getSelectedItem().toString())) {
+            showKursi();
+        }
+    }//GEN-LAST:event_btnE6ActionPerformed
+
+    private void btnE7ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnE7ActionPerformed
+        // TODO add your handling code here:
+        String kode = "E7";
+        setTombol(kode, cmbListFilm.getSelectedItem().toString());
+        if (!isBooking(kode, cmbListFilm.getSelectedItem().toString())) {
+            showKursi();
+        }
+    }//GEN-LAST:event_btnE7ActionPerformed
+
+    private void btnE8ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnE8ActionPerformed
+       // TODO add your handling code here:
+       String kode = "E8";
+        setTombol(kode, cmbListFilm.getSelectedItem().toString());
+        if (!isBooking(kode, cmbListFilm.getSelectedItem().toString())) {
+            showKursi();
+        }
+    }//GEN-LAST:event_btnE8ActionPerformed
+
+    private void btnF1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnF1ActionPerformed
+        // TODO add your handling code here:
+        String kode = "F1";
+        setTombol(kode, cmbListFilm.getSelectedItem().toString());
+        if (!isBooking(kode, cmbListFilm.getSelectedItem().toString())) {
+            showKursi();
+        }
+    }//GEN-LAST:event_btnF1ActionPerformed
+
+    private void btnF2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnF2ActionPerformed
+       // TODO add your handling code here:
+       String kode = "F2";
+        setTombol(kode, cmbListFilm.getSelectedItem().toString());
+        if (!isBooking(kode, cmbListFilm.getSelectedItem().toString())) {
+            showKursi();
+        }
+    }//GEN-LAST:event_btnF2ActionPerformed
+
+    private void btnF3ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnF3ActionPerformed
+       // TODO add your handling code here:
+       String kode = "F3";
+        setTombol(kode, cmbListFilm.getSelectedItem().toString());
+        if (!isBooking(kode, cmbListFilm.getSelectedItem().toString())) {
+            showKursi();
+        }
+    }//GEN-LAST:event_btnF3ActionPerformed
+
+    private void btnF4ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnF4ActionPerformed
+       // TODO add your handling code here:
+       String kode = "F4";
+        setTombol(kode, cmbListFilm.getSelectedItem().toString());
+        if (!isBooking(kode, cmbListFilm.getSelectedItem().toString())) {
+            showKursi();
+        }
+    }//GEN-LAST:event_btnF4ActionPerformed
+
+    private void btnF5ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnF5ActionPerformed
+       // TODO add your handling code here:
+       String kode = "F5";
+        setTombol(kode, cmbListFilm.getSelectedItem().toString());
+        if (!isBooking(kode, cmbListFilm.getSelectedItem().toString())) {
+            showKursi();
+        }
+    }//GEN-LAST:event_btnF5ActionPerformed
+
+    private void btnF6ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnF6ActionPerformed
+        // TODO add your handling code here:
+        String kode = "F6";
+        setTombol(kode, cmbListFilm.getSelectedItem().toString());
+        if (!isBooking(kode, cmbListFilm.getSelectedItem().toString())) {
+            showKursi();
+        }
+    }//GEN-LAST:event_btnF6ActionPerformed
+
+    private void btnF7ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnF7ActionPerformed
+       // TODO add your handling code here:
+       String kode = "F7";
+        setTombol(kode, cmbListFilm.getSelectedItem().toString());
+        if (!isBooking(kode, cmbListFilm.getSelectedItem().toString())) {
+            showKursi();
+        }
+    }//GEN-LAST:event_btnF7ActionPerformed
+
+    private void mnKasirActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_mnKasirActionPerformed
+        // TODO add your handling code here:
+        FormPembelian frmBeli = new FormPembelian();
+        frmBeli.setVisible(true);
+        this.setVisible(false);
+    }//GEN-LAST:event_mnKasirActionPerformed
+
+    private void mnFilmActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_mnFilmActionPerformed
+        // TODO add your handling code here:
+        FrmFilm frmFilm = new FrmFilm();
+        frmFilm.setVisible(true);
+        this.setVisible(false);
+    }//GEN-LAST:event_mnFilmActionPerformed
+
+    private void mnStudioActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_mnStudioActionPerformed
+        // TODO add your handling code here:
+        FormStudio frmStudio = new FormStudio();
+        frmStudio.setVisible(true);
+        this.setVisible(false);
+    }//GEN-LAST:event_mnStudioActionPerformed
+
+    private void btnBackActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnBackActionPerformed
+        // TODO add your handling code here:
+        emptyKursi();
+    }//GEN-LAST:event_btnBackActionPerformed
+
+    private void btnPesanActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnPesanActionPerformed
+        // TODO add your handling code here:
+        int input = JOptionPane.showConfirmDialog(null, "Yakin ??? ","konfirmasi",JOptionPane.YES_NO_OPTION);    
+        if (input == 0 && Double.parseDouble(txtKembali.getText()) >= 0)
+        {
+            String [] seat = txtKodeKursi.getText().split(" ");
+            for (int i = 1; i < seat.length; i++) 
+            {
+                Pembelian newValue = new Pembelian();
+                for (Pembelian p : new Pembelian().getAll()) 
+                {
+                    if (p.getStudio().getStudio().equals(cmbStudio.getSelectedItem().toString())) 
+                    {
+                        if (p.getStudio().getFilm().getJudul().equals(cmbListFilm.getSelectedItem().toString())) 
+                        {
+                            int idFilm = p.getStudio().getFilm().getIdFilm();
+                            int idStudio = p.getStudio().getIdStudio();
+                            newValue.getStudio().setIdStudio(idStudio);
+                            newValue.getStudio().getFilm().setIdFilm(idFilm);
+                        }
+                    }
+                }
+                
+                newValue.setIdPembelian(0);               
+                newValue.getKursi().setKode(seat[i]);
+                newValue.getKursi().setStatus("book");
+                newValue.save();
+            }
+            Transaksi t = new Transaksi();
+            t.setJudul(cmbListFilm.getSelectedItem().toString());
+            t.setStudio(cmbStudio.getSelectedItem().toString());
+            t.setNama_makanan(jComboBoxMakan.getSelectedItem().toString());
+            t.setNama_minuman(jComboBoxMinum.getSelectedItem().toString());
+            t.setKodekursi(txtKodeKursi.getText());
+            t.setTotal((int) Double.parseDouble(txtTotalHarga.getText()));
+            t.save();
+        JOptionPane.showMessageDialog(null, "Booking Sukses!");
+        }
+        else {
+            JOptionPane.showMessageDialog(null, "Booking Gagal!","Gagal",JOptionPane.ERROR_MESSAGE);
+        }
+    }//GEN-LAST:event_btnPesanActionPerformed
+
+    private void txtKodeKursiActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txtKodeKursiActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_txtKodeKursiActionPerformed
+
+    private void cmbJamActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cmbJamActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_cmbJamActionPerformed
+
+    private void txtHargaSatuanActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txtHargaSatuanActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_txtHargaSatuanActionPerformed
+
+    private void mnTransaksiActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_mnTransaksiActionPerformed
+        // TODO add your handling code here:
+        FormTransaksi ft = new FormTransaksi();
+        ft.setVisible(true);
+        this.setVisible(false);
+    }//GEN-LAST:event_mnTransaksiActionPerformed
+
+    private void btnHitungActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnHitungActionPerformed
+        // TODO add your handling code here:
+        Double bayar=Double.parseDouble(txtBayar.getText());
+        Double total=Double.parseDouble(txtTotalHarga.getText());
+        Double hasilhitung;
+        
+        hasilhitung = bayar - total;
+        txtKembali.setText(String.valueOf(hasilhitung));
+    }//GEN-LAST:event_btnHitungActionPerformed
+
+    private void cmbListFilmActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cmbListFilmActionPerformed
+        // TODO add your handling code here:
+        Object obj = evt.getSource();
+        if(obj == cmbListFilm){
+            cmbStudio.setModel(new DefaultComboBoxModel());
+            for (Studio studio : new Studio().getAll()) {
+                if (studio.getFilm().getJudul().equals(cmbListFilm.getSelectedItem().toString())) {
+                    cmbStudio.addItem(studio.getStudio());
+                }
+            }
+            emptyKursi();
+        }
+    }//GEN-LAST:event_cmbListFilmActionPerformed
+
+    private void btnCetakActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnCetakActionPerformed
+        // TODO add your handling code here:
+         JasperReport jasRep;
+        JasperPrint jasPri;
+        JasperDesign jasDes;
+        Map<String,Object> book = new HashMap<String,Object>();
+        try
+        {
+            Class.forName("com.mysql.jdbc.Driver");
+            con = DriverManager.getConnection("jdbc:mysql://localhost/cinema","root","");
+
+            File report = new File("C:/Users/soyidwahyud/Documents/NetBeansProjects/BioskopProject/tiket.jrxml");
+            jasDes = JRXmlLoader.load(report);
+            //book.clear();
+            book.clear();
+            jasRep = JasperCompileManager.compileReport(jasDes);
+            jasPri = JasperFillManager.fillReport(jasRep, book, con);
+            JasperViewer.viewReport(jasPri, false);
+        }
+        catch(Exception e)
+        {
+            e.printStackTrace();
+        }
+    }//GEN-LAST:event_btnCetakActionPerformed
+
+    private void jComboBoxMakanMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jComboBoxMakanMouseClicked
+        // TODO add your handling code here:
+        
+    }//GEN-LAST:event_jComboBoxMakanMouseClicked
+
+    private void jComboBoxMakanActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jComboBoxMakanActionPerformed
+        // TODO add your handling code here:
+        for (Makanan mkn : new Makanan().getAll()) {
+            if (mkn.getNama_makanan().equals(jComboBoxMakan.getSelectedItem().toString())) {
+                jTextHargaMakan.setText(String.valueOf(mkn.getHarga()));
+            }
+        }
+    }//GEN-LAST:event_jComboBoxMakanActionPerformed
+
+    public double getTotalMakan()
+    {
+        Makanan mkn = new Makanan();
+        String makan = String.valueOf(jComboBoxMakan.getSelectedItem());
+        if(mkn.getNama_makanan().equals(jComboBoxMakan.getSelectedItem().toString()))
+        {
+            jTextHargaMakan.setText(String.valueOf(harga));
+        }
+        else
+        {
+            jTextHargaMakan.setText(String.valueOf(harga));
+        }
+        return this.harga * Integer.valueOf(jTextJumlahMakan.getText());
+    }
+    private void jComboBoxMinumActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jComboBoxMinumActionPerformed
+        // TODO add your handling code here:
+        for (Minuman mnm : new Minuman().getAll()) {
+            if (mnm.getNama_minuman().equals(jComboBoxMinum.getSelectedItem().toString())) {
+                jTextHargaMinum.setText(String.valueOf(mnm.getHarga()));
+            }
+        }
+    }//GEN-LAST:event_jComboBoxMinumActionPerformed
+
+    private void jTextJumlahMakanKeyTyped(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_jTextJumlahMakanKeyTyped
+        // TODO add your handling code here:
+        
+    }//GEN-LAST:event_jTextJumlahMakanKeyTyped
+
+    private void jTextJumlahMakanActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jTextJumlahMakanActionPerformed
+        // TODO add your handling code here:
+        int harga = Integer.parseInt(jTextHargaMakan.getText());
+        int jumlah = Integer.parseInt(jTextJumlahMakan.getText());
+        int total = harga * jumlah;
+        jTextTotMakan.setText(String.valueOf(total));
+    }//GEN-LAST:event_jTextJumlahMakanActionPerformed
+
+    private void jTextJumlahMinumActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jTextJumlahMinumActionPerformed
+        // TODO add your handling code here:
+        int harga = Integer.parseInt(jTextHargaMinum.getText());
+        int jumlah = Integer.parseInt(jTextJumlahMinum.getText());
+        int total = harga * jumlah;
+        jTextTotMinum.setText(String.valueOf(total));
+    }//GEN-LAST:event_jTextJumlahMinumActionPerformed
+
+    private void txtBayarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txtBayarActionPerformed
+        // TODO add your handling code here:
+        Double bayar=Double.parseDouble(txtBayar.getText());
+        Double totalMakan = Double.parseDouble(jTextHargaMakan.getText());
+        Double totalMinum = Double.parseDouble(jTextHargaMinum.getText());
+        Double total=Double.parseDouble(txtTotalHarga.getText());
+        Double hasilhitung;
+        
+        hasilhitung = bayar - (total + totalMakan + totalMinum);
+        txtKembali.setText(String.valueOf(hasilhitung));
+    }//GEN-LAST:event_txtBayarActionPerformed
+
+    public void totalSeluruh()
+    {
+        double totalMakan=Double.parseDouble(jTextTotMakan.getText());
+        double totalHarga = Double.parseDouble(txtTotalHarga.getText());
+        double totalMinum = Double.parseDouble(jTextTotMinum.getText());
+        double hitung;
+        hitung =  totalMakan + totalHarga + totalMinum;
+        txtTotalHargaSeluruh.setText(String.valueOf(hitung));
+    }
+    
+    /**
+     * @param args the command line arguments
+     */
+    public static void main(String args[]) {
+        /* Set the Nimbus look and feel */
+        //<editor-fold defaultstate="collapsed" desc=" Look and feel setting code (optional) ">
+        /* If Nimbus (introduced in Java SE 6) is not available, stay with the default look and feel.
+         * For details see http://download.oracle.com/javase/tutorial/uiswing/lookandfeel/plaf.html 
+         */
+        try {
+            for (javax.swing.UIManager.LookAndFeelInfo info : javax.swing.UIManager.getInstalledLookAndFeels()) {
+                if ("Windows".equals(info.getName())) {
+                    javax.swing.UIManager.setLookAndFeel(info.getClassName());
+                    break;
+                }
+            }
+        } catch (ClassNotFoundException ex) {
+            java.util.logging.Logger.getLogger(FormPembelian.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+        } catch (InstantiationException ex) {
+            java.util.logging.Logger.getLogger(FormPembelian.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+        } catch (IllegalAccessException ex) {
+            java.util.logging.Logger.getLogger(FormPembelian.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+        } catch (javax.swing.UnsupportedLookAndFeelException ex) {
+            java.util.logging.Logger.getLogger(FormPembelian.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+        }
+        //</editor-fold>
+
+        /* Create and display the form */
+        java.awt.EventQueue.invokeLater(new Runnable() {
+            public void run() {
+                new FormPembelian().setVisible(true);
+            }
+        });
+    }
+
+    // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JMenu Edit;
+    private javax.swing.JMenu FileMenu;
+    private javax.swing.JLabel Film;
+    private javax.swing.JLabel JumlahMakan;
+    private javax.swing.JLabel JumlahMinum;
+    private javax.swing.JLabel bayar;
+    private javax.swing.JButton btnA1;
+    private javax.swing.JButton btnA2;
+    private javax.swing.JButton btnA3;
+    private javax.swing.JButton btnA4;
+    private javax.swing.JButton btnA5;
+    private javax.swing.JButton btnA6;
+    private javax.swing.JButton btnA7;
+    private javax.swing.JButton btnA8;
+    private javax.swing.JButton btnB1;
+    private javax.swing.JButton btnB2;
+    private javax.swing.JButton btnB3;
+    private javax.swing.JButton btnB4;
+    private javax.swing.JButton btnB5;
+    private javax.swing.JButton btnB6;
+    private javax.swing.JButton btnB7;
+    private javax.swing.JButton btnB8;
+    private javax.swing.JButton btnBack;
+    private javax.swing.JButton btnC1;
+    private javax.swing.JButton btnC2;
+    private javax.swing.JButton btnC3;
+    private javax.swing.JButton btnC4;
+    private javax.swing.JButton btnC5;
+    private javax.swing.JButton btnC6;
+    private javax.swing.JButton btnC7;
+    private javax.swing.JButton btnC8;
+    private javax.swing.JButton btnCetak;
+    private javax.swing.JButton btnD1;
+    private javax.swing.JButton btnD2;
+    private javax.swing.JButton btnD3;
+    private javax.swing.JButton btnD4;
+    private javax.swing.JButton btnD5;
+    private javax.swing.JButton btnD6;
+    private javax.swing.JButton btnD7;
+    private javax.swing.JButton btnD8;
+    private javax.swing.JButton btnE1;
+    private javax.swing.JButton btnE2;
+    private javax.swing.JButton btnE3;
+    private javax.swing.JButton btnE4;
+    private javax.swing.JButton btnE5;
+    private javax.swing.JButton btnE6;
+    private javax.swing.JButton btnE7;
+    private javax.swing.JButton btnE8;
+    private javax.swing.JButton btnF1;
+    private javax.swing.JButton btnF2;
+    private javax.swing.JButton btnF3;
+    private javax.swing.JButton btnF4;
+    private javax.swing.JButton btnF5;
+    private javax.swing.JButton btnF6;
+    private javax.swing.JButton btnF7;
+    private javax.swing.JButton btnF8;
+    private javax.swing.JButton btnHitung;
+    private javax.swing.JButton btnPesan;
+    private javax.swing.JComboBox<String> cmbJam;
+    private javax.swing.JComboBox<String> cmbListFilm;
+    private javax.swing.JComboBox<String> cmbListHari;
+    private javax.swing.JComboBox<String> cmbStudio;
+    private javax.swing.JComboBox<String> jComboBoxMakan;
+    private javax.swing.JComboBox<String> jComboBoxMinum;
+    private javax.swing.JLabel jHargaMakan;
+    private javax.swing.JLabel jHargaMinum;
+    private javax.swing.JLabel jLabel1;
+    private javax.swing.JLabel jLabel10;
+    private javax.swing.JLabel jLabel11;
+    private javax.swing.JLabel jLabel12;
+    private javax.swing.JLabel jLabel2;
+    private javax.swing.JLabel jLabel3;
+    private javax.swing.JLabel jLabel4;
+    private javax.swing.JLabel jLabel5;
+    private javax.swing.JLabel jLabel6;
+    private javax.swing.JLabel jLabel7;
+    private javax.swing.JLabel jLabel8;
+    private javax.swing.JLabel jLabel9;
+    private javax.swing.JLabel jLabelSeluruh;
+    private javax.swing.JMenuBar jMenuBar1;
+    private javax.swing.JSeparator jSeparator1;
+    private javax.swing.JSeparator jSeparator2;
+    private javax.swing.JTextField jTextField1;
+    private javax.swing.JTextField jTextHargaMakan;
+    private javax.swing.JTextField jTextHargaMinum;
+    private javax.swing.JTextField jTextJumlahMakan;
+    private javax.swing.JTextField jTextJumlahMinum;
+    private javax.swing.JTextField jTextTotMakan;
+    private javax.swing.JTextField jTextTotMinum;
+    private javax.swing.JLabel jTotalMakan;
+    private javax.swing.JLabel jTotalMinum;
+    private javax.swing.JLabel kembali;
+    private javax.swing.JMenuItem mnFilm;
+    private javax.swing.JMenuItem mnKasir;
+    private javax.swing.JMenuItem mnKeluar;
+    private javax.swing.JMenuItem mnStudio;
+    private javax.swing.JMenuItem mnTransaksi;
+    private javax.swing.JLabel pilihMakan;
+    private javax.swing.JLabel pilihMinum;
+    private javax.swing.JTextField txtBayar;
+    private javax.swing.JTextField txtHargaSatuan;
+    private javax.swing.JTextField txtJumlahTiket;
+    private javax.swing.JTextField txtKembali;
+    private javax.swing.JTextField txtKodeKursi;
+    private javax.swing.JTextField txtTotalHarga;
+    private javax.swing.JTextField txtTotalHargaSeluruh;
+    // End of variables declaration//GEN-END:variables
+}
